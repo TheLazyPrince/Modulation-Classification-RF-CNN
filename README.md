@@ -1,49 +1,46 @@
-# RF Modulation Classification using Deep Learning
+# RF Modulation Classifier (Python & Deep Learning)
 
-## 📌 Project Overview
-This project implements a **Deep Learning based receiver** capable of classifying digital modulation types (QPSK, 16QAM, 8PSK) under varying noise conditions.
+## About The Project
+I built this project to explore how Computer Vision can be applied to Radio Frequency (RF) tasks.
+Since I didn't have access to physical RF hardware (like an SDR or Spectrum Analyzer) at home, I decided to build a full simulation in Python.
 
-Unlike traditional RF engineering approaches that use mathematical definitions for demodulation, this project treats the problem as a **Computer Vision task**. It generates synthetic I/Q signals, converts them into Constellation Diagrams (images), and uses a Convolutional Neural Network (CNN) to classify the modulation scheme.
+The goal was to create a "Digital Twin" of a communication system: generating signals, simulating a noisy channel, and then using a Neural Network to figure out which modulation was used based on the signal's shape.
 
-## 🚀 Key Features
-* **Synthetic Data Generation:** A custom Python simulator acts as the Transmitter and Channel, generating complex I/Q data.
-* **Channel Modeling:** Simulates **AWGN** (Additive White Gaussian Noise) with variable **SNR** (Signal-to-Noise Ratio) to train the model for robust performance in noisy environments.
-* **Visual Representation:** Converts raw RF signals into **Constellation Diagrams**.
-* **AI Model:** A PyTorch-based CNN that classifies modulation types with high accuracy (>95%).
-* **Hardware-Agnostic:** Runs entirely on a standard PC without requiring SDR hardware (Software Defined Radio).
+## How It Works
+Instead of using traditional mathematical demodulation, I treated this as an image classification problem:
 
-## 🛠️ Tech Stack
-* **Language:** Python 3.x
-* **Deep Learning:** PyTorch
-* **Data Processing:** NumPy (for Complex Number manipulation)
-* **Visualization:** Matplotlib, Seaborn
+1.  **The Transmitter (Simulation):** I used `numpy` to generate complex I/Q signals for three common modulation types: **QPSK**, **16QAM**, and **8PSK**.
+2.  **The Channel (Physics):** To make it realistic, I added **AWGN** (Additive White Gaussian Noise) to the signals. I varied the **SNR** (Signal-to-Noise Ratio) randomly, so the model learns to handle both clean and very noisy signals.
+3.  **The "Eyes":** I plotted the I/Q data as **Constellation Diagrams** (scatter plots) and saved them as images.
+4.  **The "Brain":** I trained a custom **CNN (Convolutional Neural Network)** in PyTorch to look at these diagrams and classify the modulation type.
 
-## 🧠 Theory & Logic
+## Project Structure
+* `data_generator.py`: The simulator. It creates the signals, adds noise/interference, and generates the dataset images.
+* `train_model.py`: The PyTorch model. It loads the images into RAM and trains the CNN.
+* `evaluate.py`: Tests the model and visualizes the results (including a Confusion Matrix).
 
-### 1. Signal Generation (The Transmitter)
-The system generates digital symbols mapped to the complex plane (I/Q Data):
-* **QPSK:** 4 points (2 bits/symbol).
-* **8PSK:** 8 points arranged in a circle (3 bits/symbol).
-* **16QAM:** 16 points arranged in a grid (4 bits/symbol).
+## Key Concepts Used
+* **RF:** I/Q Data, Constellation Diagrams, AWGN, SNR, Modulation schemes (QPSK/8PSK/16QAM).
+* **Deep Learning:** CNN Architecture, Custom Dataset Loading, Supervised Learning.
+* **Python:** Numpy for vector math, Matplotlib for visualization.
 
-### 2. Channel Simulation (The Physics)
-To mimic real-world conditions, the system introduces randomness:
-* **AWGN:** Random Gaussian noise is added to the ideal symbols.
-* **Variable SNR:** The model is trained on a range of Signal-to-Noise Ratios (5dB - 25dB) to ensure it learns the *structure* of the data rather than memorizing clean samples.
+## Results
+The model achieves high accuracy (approx. 95%+) on the test set.
+It was interesting to see that the model makes mistakes exactly where a human would—when the SNR is so low that the constellation "dots" turn into a shapeless cloud of noise.
 
-### 3. The "Vision" Approach
-Instead of analyzing the time-domain signal, we plot the **In-Phase (Real)** vs. **Quadrature (Imaginary)** components.
-* The CNN analyzes the geometric distribution of the points (the "blobs").
-* It learns to distinguish between a "Square grid" (16QAM) and a "4-corner layout" (QPSK), even when the points are scattered due to noise.
-
-## 📊 Results
-* **Accuracy:** The model achieves high accuracy on the test set.
-* **Robustness:** Successfully classifies signals even in low SNR environments where the constellation diagram appears "cloudy".
-
-## 📂 Project Structure
-* `data_generator.py`: Generates the I/Q signals and saves them as images.
-* `train_model.py`: Defines the CNN architecture and trains the model.
-* `evaluate.py`: visualizes predictions and Confusion Matrix.
+## How to Run
+1.  Install requirements:
+    ```bash
+    pip install numpy matplotlib torch torchvision seaborn scikit-learn
+    ```
+2.  Generate the data:
+    ```bash
+    python data_generator.py
+    ```
+3.  Train the model:
+    ```bash
+    python train_model.py
+    ```
 
 ---
-*Created as a preparation project for RF & AI integration roles.*
+*Built as a hands-on project to combine Signal Processing concepts with AI.*
