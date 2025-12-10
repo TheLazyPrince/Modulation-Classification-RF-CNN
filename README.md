@@ -28,19 +28,12 @@ Instead of using traditional mathematical demodulation, I treated this as an ima
 The model achieves high accuracy (approx. 95%+) on the test set.
 It was interesting to see that the model makes mistakes exactly where a human would—when the SNR is so low that the constellation "dots" turn into a shapeless cloud of noise.
 
-## How to Run
-1.  Install requirements:
+
+1. Install requirements:
     ```bash
     pip install numpy matplotlib torch torchvision seaborn scikit-learn
     ```
-2.  Generate the data:
-    ```bash
-    python data_generator.py
-    ```
-3.  Train the model:
-    ```bash
-    python train_model.py
-    ```
+
 
 ---
 *Built as a hands-on project to combine Signal Processing concepts with AI.*
